@@ -1,0 +1,15 @@
+[
+    {
+        "ClientId": "cache.client",
+        "ClientSecrets": [
+            "secret"
+        ],
+        "Description": "Client for client credentials flow",
+        "AllowedGrantTypes": [
+            "client_credentials"
+        ],
+        "AllowedScopes": [
+            "cache"
+        ]
+    }
+]
