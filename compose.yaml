@@ -1,0 +1,15 @@
+services:
+  cache:
+    image: varnish
+    command: varnishd -f /etc/varnish/default.vcl -F -s file,/storage,10G
+    ports:
+      - 8080:80
+    tmpfs:
+      - /var/lib/varnish/varnishd:exec
+    volumes:
+      - ./cache/default.vcl:/etc/varnish/default.vcl:ro
+      - ./cache/storage:/storage
+  fetch:
+    build: ./fetch
+    volumes:
+      - ./fetch/nginx.conf:/etc/nginx/nginx.conf:ro
