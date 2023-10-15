@@ -11,7 +11,7 @@ A varnish cache behind an OAuth2 proxy written in Python.
                    │
                    │          ┌─────────────┐
    gets jwks to    │          │  oidc       │
-   validates token └─────────►│  :8082      │
+   validate token  └─────────►│  :8082      │
                               │  (idSrv)    │
                               └─────────────┘
 
@@ -48,9 +48,9 @@ It does not check whether the JWT contains the correct claims at the moment. Tha
 
 ### Cache
 
-Cache is a service running varnish with a very simple config, specifying `fetch` as the backend and allowing requests containing the `Authorization` header to be cached. The TTL of the objects is specified in the `Cache-Control` header returns by the `fetch` service.
+Cache is a service running varnish with a very simple config, specifying `fetch` as the backend and allowing requests containing the `Authorization` header to be cached. The TTL of the objects is specified in the `Cache-Control` header returned by the `fetch` service.
 
-It is using the `file` storage backend, specified on the command line in `compose.yaml`.
+It uses the `file` storage backend, specified on the command line in `compose.yaml`.
 
 To see more information, you can run `varnishstat` and `varnishlog` in the container.
 
