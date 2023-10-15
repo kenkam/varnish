@@ -34,9 +34,9 @@ $ curl http://localhost/big --header "Authorization: Bearer $token" -o /dev/null
 100 1000M  100 1000M    0     0   621M      0  0:00:01  0:00:01 --:--:--  622M
 ```
 
-## Why?
+## Why did you write your own Python proxy?
 
-To test the above architecture. I couldn't find a simple proxy that supported JWT validation, so I cobbled a python script together.
+I couldn't find a simple proxy that supported JWT validation.
 
 ## Components
 
@@ -48,7 +48,9 @@ It does not check whether the JWT contains the correct claims at the moment. Tha
 
 ### Cache
 
-Cache is a service running varnish with a very simple config, specifying `fetch` as the backend and allowing requests containing the `Authorization` header to be cached. The TTL of the objects is specified in the `Cache-Control` header returns by the `fetch` service
+Cache is a service running varnish with a very simple config, specifying `fetch` as the backend and allowing requests containing the `Authorization` header to be cached. The TTL of the objects is specified in the `Cache-Control` header returns by the `fetch` service.
+
+It is using the `file` storage backend, specified on the command line in `compose.yaml`.
 
 To see more information, you can run `varnishstat` and `varnishlog` in the container.
 
