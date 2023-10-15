@@ -1,4 +1,6 @@
-# Varnish PoC
+# Varnish Caching + OAuth2 proxy
+
+A varnish cache behind an OAuth2 proxy written in Python.
 
 ```
              ┌────────────┐   ┌─────────────┐   ┌───────────┐
@@ -31,6 +33,10 @@ $ curl http://localhost/big --header "Authorization: Bearer $token" -o /dev/null
                                  Dload  Upload   Total   Spent    Left  Speed
 100 1000M  100 1000M    0     0   621M      0  0:00:01  0:00:01 --:--:--  622M
 ```
+
+## Why?
+
+To test the above architecture. I couldn't find a simple proxy that supported JWT validation, so I cobbled a python script together.
 
 ## Components
 
