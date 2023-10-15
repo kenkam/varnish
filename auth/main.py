@@ -23,33 +23,24 @@ class ProxyHTTPRequestHandler(BaseHTTPRequestHandler):
                 sent = True
                 return
 
-            resp = requests.get(url, headers=self.headers, verify=False)
-            sent = True
+            resp = requests.get(url, headers=self.headers, verify=False, stream=True)
 
             self.send_response(resp.status_code)
             self.send_resp_headers(resp)
-            msg = resp.text
             if body:
-                self.wfile.write(msg.encode(encoding='UTF-8',errors='strict'))
+                for chunk in resp.iter_content(16384):
+                    self.wfile.write(chunk)
+            
+            sent = True
             return
         finally:
             if not sent:
                 self.send_error(500, 'error trying to proxy')
 
-    # def parse_headers(self):
-    #     req_header = {}
-    #     for line in self.headers:
-    #         line_parts = [o.strip() for o in line.split(':', 1)]
-    #         if len(line_parts) == 2:
-    #             req_header[line_parts[0]] = line_parts[1]
-    #     return req_header
-
     def send_resp_headers(self, resp):
         respheaders = resp.headers
         for key in respheaders:
-            if key not in ['Content-Encoding', 'Transfer-Encoding', 'content-encoding', 'transfer-encoding', 'content-length', 'Content-Length']:
-                self.send_header(key, respheaders[key])
-        self.send_header('Content-Length', len(resp.content))
+            self.send_header(key, respheaders[key])
         self.end_headers()
 
     def _get_authorization_token(self, headers):
@@ -98,7 +89,7 @@ def main(argv=sys.argv[1:]):
         print('usage: ./main.py --hostname <hostname> --authority <authority> [--port]')
         sys.exit(-1)
 
-    print('http server is proxying on {} on :{}...'.format(args.hostname, args.port))
+    print('http server is proxying {} on :{}...'.format(args.hostname, args.port))
     server_address = ('0.0.0.0', args.port)
     httpd = ThreadedHTTPServer(server_address, ProxyHTTPRequestHandler)
     print('http server is running as reverse proxy')
